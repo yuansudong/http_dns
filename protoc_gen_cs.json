@@ -1,0 +1,6 @@
+{
+    "path": "E:/code/new/golang/src/dev.phoenix-ea.com/yuansudong/pbgen.hfdy.com/protoc.exe",
+    "csharp_out": "E:/code/new/golang/src/dev.phoenix-ea.com/yuansudong/csharp.hfdy.com/GRPC_DEMO/protocol",
+    "proto_path": "E:/code/new/golang/src/dev.phoenix-ea.com/yuansudong/pbgen.hfdy.com/protos/v3",
+    "plugin": "--plugin=protoc-gen-grpc=E:/code/new/golang/src/dev.phoenix-ea.com/yuansudong/pbgen.hfdy.com/grpc_csharp_plugin.exe"
+}

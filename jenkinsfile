@@ -1,0 +1,117 @@
+pipeline {
+  agent any
+  environment {
+    // VERSION 当前版本
+    PROJECT = "hfdy_go"
+    VERSION = "v1.0.0"
+    // APP_NAME app的名称
+    APP_NAME = "devops"
+    // BASE_URL docker基础的url
+    BASE_URL = "192.168.1.100:1234"
+    // QY_WEIXIN_WEBHOOK 企业微信发起的webhook
+    QY_WEIXIN_WEBHOOK = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7077ff2f-b25e-4279-90ab-45fc4b558528"  
+    // GO_PRO GO的工程 
+    GO_PRO = "dev.phoenix-ea.com/yuansudong/devops" 
+  }
+  stages {
+    // build 编译阶段
+    stage("build") {
+      parallel {
+        // 开发环境构建
+         stage ('build_develop') {
+           when {
+             environment name:"GIT_BRANCH",value:"origin/develop"
+           }
+           steps {
+             sh (label:'build_develop', script:
+                ''' 
+                  echo "build_develop"
+                '''
+              ) 
+           }
+         }
+         // 测试环境构建
+         stage ('build_release') {
+           when {
+             environment name:"GIT_BRANCH",value:"origin/release"
+           }
+           steps {
+             sh "echo 'build,release'"
+           }
+         }
+         // 产品级别的发布 
+         stage ('build_prod') {
+           when {
+             environment name:"GIT_BRANCH",value:"origin/master"
+           }
+           steps {
+             sh "echo 'helllo,prod'"
+           }
+         }
+      }  
+    }
+    // test 测试阶段.
+    stage("test") {
+      parallel {
+        // 开发环境中的测试
+        stage ("test_develop") {
+          when {
+            environment name:"GIT_BRANCH",value:"origin/develop" 
+          }
+          steps{
+            sh "echo 'test,develop,开发包测试'"
+          }
+        }
+        stage ("test_release") {
+          when {
+            environment name:"GIT_BRANCH",value:"origin/release"
+          }
+          steps{
+            sh "echo 'test,develop,预发布测试'"
+          }
+        }
+        stage ("test_prod") {
+          when {
+            environment name:"GIT_BRANCH",value:"origin/master"
+          }
+          steps {
+            sh "echo 'test,prod,你是没得测试的'"
+          }
+        }
+      }
+    }
+    stage("deploy"){
+      parallel {
+        stage ("deploy_develop") {
+          when {
+            environment name:"GIT_BRANCH",value:"origin/develop" 
+          }
+          steps {
+            sh (label:"deploy_develop_script",script:
+              '''
+                echo "启动脚本"
+                sudo docker-compose up -d
+              '''
+            )
+          }
+        }
+        stage ("deploy_release") {
+          when {
+            environment name:"GIT_BRANCH",value:"origin/release" 
+          }
+          steps {
+            sh "echo 'deploy,release 测试环境部署'"
+          }
+        }
+        stage ("deploy_prod") {
+           when {
+             environment name:"GIT_BRANCH",value:"origin/master" 
+           } 
+           steps {
+             sh "echo 'deploy,prod 生产环境部署'"
+           }
+        }
+      }
+    }
+  }
+}

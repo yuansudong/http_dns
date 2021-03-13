@@ -3,21 +3,11 @@ package cmdline
 import(
 	"fmt"
 	"github.com/yuansudong/cobra"
+	"github.com/yuansudong/http_dns/flags"
+	
+	service "github.com/yuansudong/http_dns/exec/service"
 	
 )
-// GlobalFlag 全局Flag
-type GlobalFlag struct {
-	
-	F1 *string
-	
-	F2 *int32
-	
-	F3 *int64
-	
-	F4 *float32
-	
-}
-
 
 var (
 	// _Branch 分支名称
@@ -44,7 +34,7 @@ func _InitVersion() *cobra.Command {
 	mCommand.Short = "查看编译以及版本信息"
 	mCommand.Run = func(cmd *cobra.Command, args []string) {
 		fmt.Println("App Name     :   ", "http_dns")
-		fmt.Println("App Version  :   ", "")
+		fmt.Println("App Version  :   ", "v0.0.1")
 		fmt.Println("Git Branch   :   ", _GitBranch)
 		fmt.Println("Git Commit   :   ", _GitCommit)
 		fmt.Println("Git Account  :   ", _GitAccount)
@@ -58,10 +48,10 @@ func _InitVersion() *cobra.Command {
 
 var _Root *cobra.Command = _InitRoot()
 func _InitRoot() *cobra.Command {
-	mGlobalsFlags :=  new(GlobalFlag)
+	mGlobalsFlags :=  new(flags.GlobalFlag)
 	mRootCommand := new(cobra.Command)
 	mRootCommand.Use = "http_dns" 
-	mRootCommand.Long = "这是一个Example.exe的程序"
+	mRootCommand.Long = "所有的域名查询服务都要走这里"
 	
 		
 		mGlobalsFlags.F1 = mRootCommand.PersistentFlags().String(
@@ -71,30 +61,8 @@ func _InitRoot() *cobra.Command {
 		)
 		
 	
-		
-		mGlobalsFlags.F2 = mRootCommand.PersistentFlags().Int32(
-			"F2",
-			32, 
-			"F2=V2",
-		)
-		
 	
-		
-		mGlobalsFlags.F3 = mRootCommand.PersistentFlags().Int64(
-			"F3",
-			64, 
-			"F3=V3",
-		)
-		
-	
-		
-		mGlobalsFlags.F4 = mRootCommand.PersistentFlags().Float32(
-			"F4",
-			32.00, 
-			"F4=V4",
-		)
-		
-	
+    mRootCommand.AddCommand(_InitSubService(mGlobalsFlags))
 	
 	mRootCommand.AddCommand(_InitVersion())
 	return mRootCommand
@@ -103,6 +71,27 @@ func _InitRoot() *cobra.Command {
 // Execute 执行入口
 func Execute() error {
 	return _Root.Execute()
+}
+
+func _InitSubService(mGlobal *flags.GlobalFlag) *cobra.Command {
+	mLocal := new(flags.LocalServiceFlag)
+	mCommand :=  new(cobra.Command)
+	mCommand.Use = "service"
+	mCommand.Long = "开启一个http_dns服务"
+	mCommand.Short = "开启一个http_dns服务"
+	mCommand.Run = func(cmd *cobra.Command, args []string) {
+		service.Startup(mGlobal,mLocal)
+	} 
+	
+		
+		mLocal.DbDns = mCommand.PersistentFlags().String(
+			"db_dns",
+			"loadlhost", 
+			"A1=V1",
+		)
+		
+	
+	return mCommand
 }
 
 

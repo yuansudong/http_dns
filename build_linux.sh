@@ -7,4 +7,4 @@ commitid=$(git rev-parse --short HEAD)
 account=$(git log --pretty=format:"%%an" -1)
 branch=$(git branch --show-current)
 nowtime=$(date +%Y-%m-%d.%H:%M:%S)
-go build -ldflags "-X cmdline._GitBranch=${branch} -X cmdline._OS=${os} -X cmdline._Arch=${arch} -X cmdline._GoVersion=${goversion} -X cmdline._GitCommit=${commitid} -X cmdline._GitAccount=${account} -X cmdline._DateTime=${nowtime}" -o ${appname}
+go build -ldflags "-X github.com/yuansudong/http_dns/cmdline._GitBranch=${branch} -X github.com/yuansudong/http_dns/cmdline._OS=${os} -X github.com/yuansudong/http_dns/cmdline._Arch=${arch} -X github.com/yuansudong/http_dns/cmdline._GoVersion=${goversion} -X github.com/yuansudong/http_dns/cmdline._GitCommit=${commitid} -X github.com/yuansudong/http_dns/cmdline._GitAccount=${account} -X github.com/yuansudong/http_dns/cmdline._DateTime=${nowtime}" -o http_dns

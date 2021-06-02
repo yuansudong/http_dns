@@ -1,0 +1,29 @@
+syntax = "proto3";
+package service.normal.v1;
+option go_package = "github.com/yuansudong/http_dns/gen/go/service/dns/normal/dnsv1;dnsv1";
+
+
+
+
+// 查询请求
+message C2SQuery {
+    // Domain 用于指定域名
+    string Domain = 1;
+}
+// 查询响应
+message S2CQuery {
+    // IP 用于地址查询
+    string IP = 1;
+}
+import "google/api/annotations.proto";
+
+// Dns Dns查询服务
+service Dns {
+    // Query 公司渠道登录
+    rpc Query(C2SQuery) returns (S2CQuery) {
+      option (google.api.http) = {
+        get: "/v1/query/{Domain}"
+      };
+    };
+}
+  

@@ -1,17 +1,12 @@
 {
     "protoc": {
-        "path": "protoc.exe",
+        "path": "${workspaceRoot}/protoc.exe",
         "compile_on_save": true,
         "options": [
-            "--proto_path=protos/v3",
-            "--go_out=plugins=grpc:E:/code/golang/src",
-            "--validate_out=lang=go:E:/code/golang/src",
-            "--grpc-gateway_out=logtostderr=true:E:/code/golang/src",
-            "--swagger_out=logtostderr=true:E:/code/golang/src/dev.phoenix-ea.com/yuansudong/doc.hfdy.com/file",
-            "--mock_out=logtostderr=true:E:/code/golang/src/dev.phoenix-ea.com/yuansudong/doc.hfdy.com/file",
-            "--code_out=logtostderr=true:E:/code/golang/src/dev.phoenix-ea.com/yuansudong/doc.hfdy.com/file",
-            "--mysql_out=logtostderr=true:E:/code/golang/src/dev.phoenix-ea.com/yuansudong/doc.hfdy.com/file",
-            "--postman_out=logtostderr=true:E:/code/golang/src/dev.phoenix-ea.com/yuansudong/doc.hfdy.com/file"
+            "--proto_path=${workspaceRoot}/protos/v3",
+            "--go_out=plugins=grpc:${env.GOPATH}/src",
+            "--grpc-gateway_out=logtostderr=true:${env.GOPATH}/src",
+            "--template_out=fix=go;import_prefix=cccc:${env.GOPATH}/src",
         ]
     }
 }
